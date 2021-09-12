@@ -33,7 +33,7 @@ Options:
 ## Example
 ```
 $ pump https://i.stack.imgur.com/Bhpd8.jpg -f
-File will be saved as Bhpd8.jpg                                                                                                  
-Fetching 494.19 kiBs in 8 chunks                                                                                                 
-Success: Bhpd8.jpg downloaded                       
+File will be saved as Bhpd8.jpg
+Fetching 494.19 kiBs in 8 chunks
+Success: Bhpd8.jpg downloaded
 ```
