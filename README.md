@@ -15,7 +15,7 @@ $ source env/bin/activate
 (env)$ pip install .
 ```
 ## Usage
-- Use as `cowin-notifier` through shell
+- Use as `pump` through shell
 ```
 Usage: pump [OPTIONS] URL
 
