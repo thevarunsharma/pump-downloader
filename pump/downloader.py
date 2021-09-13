@@ -25,7 +25,7 @@ class Downloader(threading.Thread):
                  end: int,
                  file: IO,
                  tqdm_handler: tqdm.tqdm = None):
-        """Intantiate a downloader for a single chunk
+        """Instantiate a downloader for a single chunk
         
         Parameters
         ----------
@@ -35,8 +35,8 @@ class Downloader(threading.Thread):
             start byte for resource
         end: int
             end byte for resource
-        file: FileLockHandler
-            Lock based file object for output to file output 
+        file: IO
+            file IO object for output to file 
         tqdm_handler: tqdm.tqdm
             a ``tqdm`` progress bar object to be updated as download progresses.
             Defaults to ``None``, which means no progress bar will be displayed.
