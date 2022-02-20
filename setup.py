@@ -12,5 +12,5 @@ setup(
         [console_scripts]
         pump=pump.__init__:main
     ''',
-    description="Sends E-Mail Notification for Available CoWin Slots"
+    description="Multithreaded downloader for faster downloads"
 )
