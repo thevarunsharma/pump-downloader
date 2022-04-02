@@ -1,6 +1,33 @@
 import os
+import re
+from typing import Dict, List
 from urllib.parse import urlparse
 
+
+def parse_headers(header_input: List[str]) -> Dict[str, str]:
+    """Parses header inputs to command to be supplied to the HTTP request
+
+    Parameter
+    ---------
+    header_input: list[str]
+        list containing header values
+
+    Returns
+    -------
+    Dict[str, str]
+        Headers parsed as a dictionary
+    """
+    headers = {}
+    pattern = re.compile(r'^(.*?):(.*)$')
+    for header_str in header_input:
+        match = pattern.match(header_str)
+        if match is None:
+            raise ValueError(f"Invalid header value: {header_str}")
+        key, value = match[1].strip(), match[2].lstrip()
+        if key == "Range":
+            raise ValueError("Header value not allowed: Range")
+        headers[key] = value
+    return headers
 
 def get_base_filename(url: str) -> str:
     """Checks validity of resource URL and returns the base filename

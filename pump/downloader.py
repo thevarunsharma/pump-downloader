@@ -8,7 +8,7 @@ import uuid
 
 from math import ceil
 from time import sleep
-from typing import IO
+from typing import IO, Dict
 from urllib.parse import urlparse
 
 GLOBAL_THREAD_LOCK = threading.Lock()
@@ -24,7 +24,8 @@ class Downloader(threading.Thread):
                  start: int, 
                  end: int,
                  file: IO,
-                 tqdm_handler: tqdm.tqdm = None):
+                 tqdm_handler: tqdm.tqdm = None,
+                 headers: Dict[str, str] = None):
         """Instantiate a downloader for a single chunk
         
         Parameters
@@ -40,6 +41,8 @@ class Downloader(threading.Thread):
         tqdm_handler: tqdm.tqdm
             a ``tqdm`` progress bar object to be updated as download progresses.
             Defaults to ``None``, which means no progress bar will be displayed.
+        headers: Dict[str, str]
+            optional headers to be passed with the http requests
         """
         super().__init__()
         # resource URL
@@ -54,6 +57,8 @@ class Downloader(threading.Thread):
         self.__fh = file
         # write pointer position
         self.__wpos = self.__start
+        # optional headers
+        self.__headers = headers
 
     def __store(self,
                 response: requests.Response):
@@ -79,7 +84,8 @@ class Downloader(threading.Thread):
 
     def run(self):
         headers = {
-            "Range" : f"bytes={self.__start}-{self.__end}"
+            "Range" : f"bytes={self.__start}-{self.__end}",
+            **self.__headers
         }
         response = requests.get(
             self.__url,
@@ -98,7 +104,8 @@ class DownloadHandler:
                  url: str,
                  chunk_count: int = 8,
                  chunk_size: int = None,
-                 verbose: bool = True):
+                 verbose: bool = True,
+                 headers: dict[str, str] = None):
         """Instantiate a download handler
         
         Parameters
@@ -118,6 +125,8 @@ class DownloadHandler:
         verbose: bool
             Whether to enable or disable verbose, progress bars, etc.
             Defaults to ``True``.
+        headers: dict
+            Optional headers for the HTTP request
         """
         # resource URL
         self.__url = url
@@ -133,6 +142,8 @@ class DownloadHandler:
         self.__downloaders = []
         # whether to display status bar
         self.__verbose = verbose
+        # optional headers to the HTTP requests
+        self.__headers = headers
     
     def get_url(self) -> str:
         """Get resource URL"""
@@ -175,6 +186,10 @@ class DownloadHandler:
     def toggle_verbose(self):
         """Toggle verbose status"""
         self.__verbose = not self.__verbose
+
+    def get_headers(self):
+        """Returns request headers"""
+        return { **self.__headers }
     
     def __get_content_length(self) -> int:
         """Fetches content length and checks partial download suppot
@@ -225,7 +240,8 @@ class DownloadHandler:
                     start,
                     end,
                     fh,
-                    status_bar
+                    status_bar,
+                    self.__headers
                 )
                 self.__downloaders.append(downloader)
                 downloader.start()

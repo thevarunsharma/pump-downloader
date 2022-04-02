@@ -3,6 +3,8 @@
 import click
 import pump.downloader as downloader
 import pump.utils as utils
+import sys
+from typing import List
 
 @click.command()
 @click.argument("url", type=str)
@@ -11,19 +13,29 @@ import pump.utils as utils
 @click.option("--output-path", "-o", type=str, help="Path to write the downloaded output file")
 @click.option("--verbose", "-v", is_flag=True, default=True, help="Enable/Disable verbose")
 @click.option("--force", "-f", is_flag=True, default=False, help="Supress confirmation for filename")
+@click.option("--header", "-H", multiple=True, default=[])
 def main(url: str,
          ccount: int,
          csize: int,
          output_path: int,
          verbose: bool,
-         force: bool):
+         force: bool,
+         header: List[str]):
     """Multithreaded Downloader for concurrent downloads"""
+    # parse headers
+    try:
+        headers = utils.parse_headers(header)
+    except Exception as e:
+        click.echo(e, err=True)
+        sys.exit(-1)
+
     # initialize downloader
     download_handler = downloader.DownloadHandler(
          url,
          ccount,
          csize,
-         verbose
+         verbose,
+         headers
     )
     
     # confirm if non-parallel download is fine or not
