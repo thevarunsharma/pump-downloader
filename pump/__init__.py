@@ -13,7 +13,7 @@ from typing import List
 @click.option("--output-path", "-o", type=str, help="Path to write the downloaded output file")
 @click.option("--verbose", "-v", is_flag=True, default=True, help="Enable/Disable verbose")
 @click.option("--force", "-f", is_flag=True, default=False, help="Supress confirmation for filename")
-@click.option("--header", "-H", multiple=True, default=[])
+@click.option("--header", "-H", multiple=True, default=[], help="Pass each request header (as in curl)")
 def main(url: str,
          ccount: int,
          csize: int,
