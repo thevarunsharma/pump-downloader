@@ -12,7 +12,7 @@ $ source env/bin/activate
 ```
 - Install the tool using pip
 ```
-(env)$ pip install .
+$ pip install pump-downloader
 ```
 ## Usage
 - Use as `pump` through shell
