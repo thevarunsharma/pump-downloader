@@ -130,20 +130,20 @@ class DownloadHandler:
         """
         # resource URL
         self.__url = url
+        # optional headers to the HTTP requests
+        self.__headers = headers
+        # whether to display status bar
+        self.__verbose = verbose
         # base filename derived form ``url``
         self.__filename = utils.get_available_path(utils.get_base_filename(url))
         # if Parallel download is supported for the resource
-        self.__parallel = True
+        self.__parallel = self.__supports_partial()
         # size of download in bytes
         self.__size = self.__get_content_length()
         # count and size of chunks to be downloaded
         self.__chunk_count, self.__chunk_size = self.__calculate_chunks(chunk_count, chunk_size)
         # thread-threads
         self.__downloaders = []
-        # whether to display status bar
-        self.__verbose = verbose
-        # optional headers to the HTTP requests
-        self.__headers = headers
     
     def get_url(self) -> str:
         """Get resource URL"""
@@ -195,13 +195,28 @@ class DownloadHandler:
         """Fetches content length and checks partial download suppot
         using a HEAD request"""
         # send a HEAD request to fetch 'Content-Length' and 'Accept-Ranges' arguments
-        response = requests.head(self.__url)
+        response = requests.head(
+            self.__url,
+            headers=self.__headers
+        )
         response.raise_for_status()
         size = response.headers.get("Content-Length")
-        unit = response.headers.get("Accept-Ranges", "none")
-        if unit == "none":
-            self.__parallel = False
         return int(size)
+
+    def __supports_partial(self) -> bool:
+        """Returns whether partial content download is supported"""
+        # sends an empty range GET request to check for partial download support
+        headers = {
+            "Range" : f"bytes=0-0",
+            **self.__headers
+        }
+        response = requests.get(
+            self.__url,
+            headers=headers
+        )
+        response.raise_for_status()
+        # 206 means range header was honored and partial content was returned
+        return response.status_code == 206
 
     def __calculate_chunks(self, 
                            chunk_count: int, 
