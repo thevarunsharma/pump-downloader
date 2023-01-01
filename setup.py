@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pump-downloader",
-    version="0.2.1",
+    version="0.2.2",
     author="Varun Sharma",
     url="https://github.com/thevarunsharma/pump-downloader",
     packages=find_packages(),

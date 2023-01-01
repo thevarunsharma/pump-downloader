@@ -192,7 +192,7 @@ class DownloadHandler:
         return { **self.__headers }
     
     def __get_content_length(self) -> int:
-        """Fetches content length and checks partial download suppot
+        """Fetches content length and checks partial download support
         using a HEAD request"""
         # send a HEAD request to fetch 'Content-Length' and 'Accept-Ranges' arguments
         response = requests.head(
@@ -234,7 +234,7 @@ class DownloadHandler:
     
     def __dispatch(self):
         """Prepare and dispatch threads"""
-        # iterate through trhead counts
+        # iterate through thread counts
         with open(self.__filename, "wb") as fh:
             for i in range(self.__chunk_count):
                 start = i * self.__chunk_size

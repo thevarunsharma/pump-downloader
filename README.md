@@ -4,19 +4,13 @@
 Downloads file in parts using multiple concurrent threads
 
 ## Installation
-_Recommended to be used in a python virtual environment._
-- Create a python virtualenv and activate it.
-```
-$ python3 -m venv env
-$ source env/bin/activate
-```
-- Install the tool using pip
+Install the tool using pip
 ```
 $ pip install pump-downloader
 ```
 ## Usage
-- Use as `pump` through shell
-```
+Use as `pump` through shell
+```bash
 $ pump --help
 Usage: pump [OPTIONS] URL
 
@@ -26,14 +20,14 @@ Options:
   -s, --csize INTEGER     Chunk size to use, defaults to size/#chunks
   -c, --ccount INTEGER    Number of Chunks to download concurrently
   -o, --output-path TEXT  Path to write the downloaded output file
-  -v, --verbose           Enable/Disable verbose
-  -f, --force             Supress confirmation for filename
+  -q, --quiet             Disable verbose
+  -f, --force             Suppress confirmation for filename
   -H, --header TEXT       Pass each request header (as in curl)
   --help                  Show this message and exit.
 ```
 
 ## Example
-```
+```bash
 $ pump 'https://storage.googleapis.com/kaggle-data-sets/705300/1231826/compressed/multinli_1.0_train.txt.zip' \
 -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0' \
 -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8' \

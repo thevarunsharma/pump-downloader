@@ -11,14 +11,14 @@ from typing import List
 @click.option("--csize", "-s", type=int, help="Chunk size to use, defaults to size/#chunks")
 @click.option("--ccount", "-c", default=8, type=int, help="Number of Chunks to download concurrently")
 @click.option("--output-path", "-o", type=str, help="Path to write the downloaded output file")
-@click.option("--verbose", "-v", is_flag=True, default=True, help="Enable/Disable verbose")
-@click.option("--force", "-f", is_flag=True, default=False, help="Supress confirmation for filename")
+@click.option("--quiet", "-q", is_flag=True, default=False, help="Disable verbose")
+@click.option("--force", "-f", is_flag=True, default=False, help="Suppress confirmation for filename")
 @click.option("--header", "-H", multiple=True, default=[], help="Pass each request header (as in curl)")
 def main(url: str,
          ccount: int,
          csize: int,
          output_path: int,
-         verbose: bool,
+         quiet: bool,
          force: bool,
          header: List[str]):
     """Multithreaded Downloader for concurrent downloads"""
@@ -28,7 +28,7 @@ def main(url: str,
     except Exception as e:
         click.echo(e, err=True)
         sys.exit(-1)
-
+    verbose = not quiet
     # initialize downloader
     download_handler = downloader.DownloadHandler(
          url,
